@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Footer full-width con cierre de árboles</title>
+<style>
+  :root{
+    --sand: #f3ead7;        /* fondo arena */
+    --forest:#244d3f;       /* verde principal */
+    --forest-700:#1f4136;   /* verde oscuro detalle */
+    --forest-600:#2a5647;   /* divisores */
+    --accent:#f3ead7;       /* textos/botón */
+  }
+
+  html,body{height:100%}
+  body{
+    margin:0;
+    background: var(--sand);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    color:#e9eee9;
+  }
+
+  /* ===== Footer a pantalla completa horizontal ===== */
+  .site-footer{
+    width:100%;
+    background: var(--forest);
+    position: relative;
+    overflow: clip; /* recorta correctamente el SVG superior */
+  }
+
+  /* ===== Silueta de árboles full-bleed ===== */
+  .tree-silhouette{
+    position: relative;
+    width:100%;
+    height:160px;          /* alto visible de árboles */
+  }
+
+  /* “Cielo” arena detrás de la silueta */
+  .tree-silhouette::before{
+    content:"";
+    position:absolute;
+    inset:-200px 0 0 0;    /* sube cielo detrás para que se vea completo */
+    background: var(--sand);
+    z-index:0;
+  }
+  .tree-silhouette svg{
+    position:absolute; inset:0;
+    width:100%; height:100%;
+    display:block;
+    z-index:1;
+  }
+  /* el path está relleno con el mismo verde del bloque para que “corte”
+     el cielo arena y cree la línea de árboles */
+  .tree-silhouette path{ fill: var(--forest); }
+
+  /* ===== Contenido del footer ===== */
+  .footer-inner{
+    max-width:1200px;
+    margin: 0 auto;
+    padding: 28px 24px 18px;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: 1.1fr 1.2fr 1fr;
+    gap: 28px;
+    align-items:start;
+  }
+  .grid > *{ position:relative; }
+  .grid > *:not(:first-child)::before{
+    content:"";
+    position:absolute;
+    left:-14px; top:4px; bottom:4px; width:1px;
+    background: linear-gradient(to bottom, transparent, var(--forest-600) 12%, var(--forest-600) 88%, transparent);
+    opacity:.9;
+  }
+
+  /* Columna izquierda */
+  .col-left nav ul{ list-style:none; padding:0; margin:0 0 18px; }
+  .col-left nav li{ margin:10px 0; }
+  .col-left a{ color:var(--accent); text-decoration:none; font-weight:700; }
+  .col-left a:hover{ text-decoration:underline; }
+
+  .social{ display:flex; gap:12px; }
+  .social a{
+    display:grid; place-items:center;
+    width:36px; height:36px; border-radius:50%;
+    border:1px solid rgba(255,255,255,.35);
+    color:var(--accent);
+  }
+  .social a:hover{ background: rgba(255,255,255,.08); }
+
+  /* Centro */
+  .col-center h3{
+    margin:0 0 6px;
+    font-family: ui-serif, Georgia, "Times New Roman", serif;
+    font-size:22px;
+    letter-spacing:.3px;
+    color:var(--accent);
+  }
+  .col-center p{ margin:0 0 14px; color:#f0efe7; opacity:.92; font-size:14px; }
+
+  form{ display:flex; gap:10px; flex-wrap:wrap; }
+  .field{ flex:1 1 220px; }
+  .field input{
+    width:100%; height:40px; border-radius:6px;
+    border:2px solid rgba(255,255,255,.45);
+    background: transparent; color: var(--accent);
+    padding:0 12px; font-weight:700; outline:none;
+  }
+  .field input::placeholder{ color:#e6e1d6; opacity:.8; }
+  .field input:focus{ border-color:#fff; background: rgba(255,255,255,.05); }
+
+  .btn{
+    height:40px; padding:0 16px; border-radius:6px; border:0;
+    background: var(--sand); color:#1d3b31; font-weight:900; letter-spacing:.6px;
+    cursor:pointer;
+  }
+  .btn:hover{ filter:brightness(1.03); }
+
+  /* Derecha */
+  .col-right h4{ margin:0 0 8px; font-weight:900; }
+  .col-right a{ color:var(--accent); text-decoration:none; }
+  .col-right a:hover{ text-decoration:underline; }
+  .contact{ line-height:1.6; font-weight:800; letter-spacing:.2px; color:var(--accent); }
+
+  /* Franja inferior */
+  .footbar{
+    margin-top:20px;
+    border-top:1px solid rgba(255,255,255,.12);
+    padding-top:14px;
+    display:flex; gap:12px; align-items:center; justify-content:space-between;
+    color:#e1e7df; font-size:13px; flex-wrap:wrap;
+  }
+  .footbar .right{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+  .footbar a{ color:#e1e7df; text-decoration:none; }
+  .footbar a:hover{ text-decoration:underline; }
+  .seal{
+    display:grid; place-items:center;
+    width:64px; height:28px; border:1px solid rgba(255,255,255,.35);
+    border-radius:999px; font-size:11px; font-weight:900;
+  }
+
+  /* Responsive */
+  @media (max-width: 920px){
+    .grid{ grid-template-columns: 1fr; }
+    .grid > *:not(:first-child)::before{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== Footer full-width ===== -->
+<footer class="site-footer" role="contentinfo" aria-label="Pie de página">
+
+  <!-- Silueta de árboles (full-bleed) -->
+  <div class="tree-silhouette" aria-hidden="true">
+    <!-- TIP: podés editar los “dientes” del bosque moviendo puntos del path -->
+    <svg viewBox="0 0 1440 200" preserveAspectRatio="none">
+      <path d="
+        M0,120 
+        C20,122 40,140 68,138
+        C110,134 138,156 170,152
+        C206,148 224,164 246,164
+        C278,164 300,148 322,150
+        C352,152 376,176 408,172
+        C438,168 462,150 486,150
+        C520,150 540,168 562,168
+        C592,168 616,152 642,152
+        C670,152 698,170 718,170
+        C742,170 776,154 796,154
+        C820,154 844,170 866,170
+        C898,170 924,154 948,154
+        C972,154 1000,172 1022,172
+        C1050,172 1078,156 1102,154
+        C1128,152 1152,164 1168,164
+        C1198,164 1224,148 1246,148
+        C1272,148 1298,164 1316,166
+        C1346,170 1378,160 1408,160
+        L1440,160 L1440,200 L0,200 Z"/>
+      <!-- pequeño trazo en el centro (detalle del ejemplo) -->
+      
+    </svg>
+  </div>
+
+  <!-- Contenido -->
+  <div class="footer-inner">
+    <div class="grid">
+      <!-- Izquierda -->
+      <div class="col-left">
+        <nav aria-label="Footer">
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Programs</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#"><strong>Join Our Team</strong></a></li>
+          </ul>
+        </nav>
+        <div class="social" aria-label="Redes">
+          <a href="#" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="#" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M22 12.06C22 6.477 17.523 2 11.94 2S1.88 6.477 1.88 12.06c0 4.998 3.657 9.141 8.437 9.94v-7.03H7.898v-2.91h2.419V9.845c0-2.39 1.425-3.711 3.606-3.711 1.044 0 2.136.187 2.136.187v2.35h-1.203c-1.186 0-1.556.736-1.556 1.49v1.786h2.647l-.423 2.91h-2.224v7.03C18.343 21.201 22 17.058 22 12.06z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Centro -->
+      <div class="col-center">
+        <h3>Get Updates</h3>
+        <p>Subscribe to our newsletter to receive updates<br/>and special announcements.</p>
+        <form onsubmit="return handleSubmit(event)">
+          <label class="field">
+            <input type="email" name="email" placeholder="*Email" required />
+          </label>
+          <label class="field">
+            <input type="text" name="first_name" placeholder="*First Name" required />
+          </label>
+          <button class="btn" type="submit">SIGN UP</button>
+        </form>
+      </div>
+
+      <!-- Derecha -->
+      <div class="col-right">
+        <h4><a href="#">Send Us A Message →</a></h4>
+        <div class="contact">
+          <div>(845)-356-1234</div>
+          <div>285 Hungry Hollow Road</div>
+          <div>Chestnut Ridge, NY 10977</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footbar">
+      <div class="left">© 2019 The Nature Place Day Camp, All Rights Reserved</div>
+      <div class="right">
+        <a href="#">Privacy Policy</a>
+        <span aria-hidden="true">|</span>
+        <a href="#">Website by 829 Studios</a>
+        <span class="seal">TNPC</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(e){
+    e.preventDefault();
+    const d = new FormData(e.target);
+    alert(`¡Gracias!\nEmail: ${d.get('email')}\nFirst Name: ${d.get('first_name')}`);
+    e.target.reset();
+    return false;
+  }
+</script>
+</body>
+</html>
